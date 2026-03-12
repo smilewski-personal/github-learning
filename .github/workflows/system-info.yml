@@ -1,0 +1,21 @@
+name: System Information
+
+on:
+  workflow_dispatch:
+
+jobs:
+  system-info:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print OS info
+        run: uname -a
+
+      - name: Print disk space
+        run: df -h
+
+      - name: Print current directory
+        run: pwd
+
+      - name: List files
+        run: ls -la
