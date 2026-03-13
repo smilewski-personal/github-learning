@@ -10,14 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print OS info
-        run: uname -a
 
-      - name: Print disk space
-        run: df -h
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Print current directory
-        run: pwd
+      - name: Generate system report
+        run: |
+          echo "System Report" > report.txt
+          echo "=============" >> report.txt
+          echo "" >> report.txt
+          echo "Date:" >> report.txt
+          date >> report.txt
+          echo "" >> report.txt
+          echo "Kernel:" >> report.txt
+          uname -a >> report.txt
+          echo "" >> report.txt
+          echo "Disk Usage:" >> report.txt
+          df -h >> report.txt
+          echo "" >> report.txt
+          echo "Directory Listing:" >> report.txt
+          ls -la >> report.txt
 
-      - name: List files
-        run: ls -la
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-report
+          path: report.txt
