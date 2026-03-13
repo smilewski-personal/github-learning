@@ -14,22 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate system report
-        run: |
-          echo "System Report" > report.txt
-          echo "=============" >> report.txt
-          echo "" >> report.txt
-          echo "Date:" >> report.txt
-          date >> report.txt
-          echo "" >> report.txt
-          echo "Kernel:" >> report.txt
-          uname -a >> report.txt
-          echo "" >> report.txt
-          echo "Disk Usage:" >> report.txt
-          df -h >> report.txt
-          echo "" >> report.txt
-          echo "Directory Listing:" >> report.txt
-          ls -la >> report.txt
+      - name: Make script executable
+        run: chmod +x scripts/system-check.sh
+
+      - name: Run system check script
+        run: ./scripts/system-check.sh
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
