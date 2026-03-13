@@ -2,6 +2,8 @@ name: System Information
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
 
 jobs:
   system-info:
