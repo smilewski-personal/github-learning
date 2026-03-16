@@ -22,8 +22,19 @@ jobs:
       - name: Show disk usage result
         run: echo "Disk usage is ${{ steps.syscheck.outputs.DISK_USAGE }}%"
 
+      - name: Run uptime check
+        run: |
+          chmod +x scripts/uptime-check.sh
+          ./scripts/uptime-check.sh
+
       - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
           name: system-report
           path: report.txt
+
+      - name: Upload uptime report
+        uses: actions/upload-artifact@v4
+        with:
+          name: uptime-report
+          path: uptime-report.txt
