@@ -12,7 +12,7 @@ https://cloudflare.com
 
 for SITE in "${SITES[@]}"
 do
-  STATUS=$(curl -o /dev/null -s -w "%{http_code}" $SITE)
+  STATUS=$(curl -L -o /dev/null -s -w "%{http_code}" $SITE)
 
   echo "$SITE   $STATUS" >> uptime-report.txt
 
