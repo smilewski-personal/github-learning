@@ -38,3 +38,25 @@ jobs:
         with:
           name: uptime-report
           path: uptime-report.txt
+
+docker-build:
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build -t github-learning .
+
+    - name: Run container
+      run: docker run -d -p 8080:80 --name test-container github-learning
+
+    - name: Wait for container to start
+      run: sleep 5
+
+    - name: Test web server
+      run: curl -f http://localhost:8080
+
+    - name: Stop container
+      run: docker stop test-container
