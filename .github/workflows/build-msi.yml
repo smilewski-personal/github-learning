@@ -25,7 +25,19 @@ jobs:
       - name: Copy MSI to installers folder
         run: |
           mkdir Applications\Installers -Force
-          copy MyApp.msi Applications\Installers\MyApp.msi
+          New-Item -ItemType Directory -Force -Path Applications/Installers
+          Copy-Item -Path MyApp.msi -Destination Applications/Installers/MyApp.msi -Force
+
+      - name: Commit and push MSI
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add Applications/Installers/MyApp.msi
+
+          git commit -m "Add MSI installer [skip ci]" || echo "No changes to commit"
+
+          git push
 
       - name: Upload MSI artifact
         uses: actions/upload-artifact@v4
