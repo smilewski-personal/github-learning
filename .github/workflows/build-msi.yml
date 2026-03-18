@@ -66,3 +66,13 @@ jobs:
         with:
           name: msi-installer-${{ steps.version.outputs.VERSION }}
           path: MyApp-${{ steps.version.outputs.VERSION }}.msi
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ steps.version.outputs.VERSION }}
+          tag_name: ${{ github.ref_name }}
+          files: MyApp-${{ steps.version.outputs.VERSION }}.msi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
