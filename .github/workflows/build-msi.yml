@@ -64,5 +64,5 @@ jobs:
       - name: Upload MSI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: msi-installer
-          path: MyApp.msi
+          name: msi-installer-${{ steps.version.outputs.VERSION }}
+          path: MyApp-${{ steps.version.outputs.VERSION }}.msi
