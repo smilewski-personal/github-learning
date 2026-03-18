@@ -3,6 +3,9 @@ name: Build MSI Installer
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-msi:
     runs-on: windows-latest
@@ -18,6 +21,11 @@ jobs:
       - name: Build MSI
         run: |
           wix build installer/Product.wxs -o MyApp.msi
+
+      - name: Copy MSI to installers folder
+        run: |
+          mkdir Applications\Installers -Force
+          copy MyApp.msi Applications\Installers\MyApp.msi
 
       - name: Upload MSI artifact
         uses: actions/upload-artifact@v4
