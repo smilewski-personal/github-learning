@@ -1,0 +1,30 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="MyApp"
+           Manufacturer="YourName"
+           Version="1.0.0"
+           UpgradeCode="12345678-1234-1234-1234-123456789012">
+
+    <MediaTemplate />
+
+    <Feature Id="MainFeature" Title="Main Feature" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+
+  </Package>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="MyApp" />
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="cmp1" Guid="*">
+        <File Source="app/hello.txt" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
