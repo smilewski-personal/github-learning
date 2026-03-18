@@ -20,8 +20,16 @@ jobs:
       - name: Get version from tag
         id: version
         run: |
-          $version = "${env:GITHUB_REF_NAME}".Replace("v","")
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $version = "${{ github.ref_name }}".Replace("v","")
+            $msiVersion = $version
+          } else {
+            $version = "dev"
+            $msiVersion = "1.0.0"
+          }
+
           echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "MSI_VERSION=$msiVersion" >> $env:GITHUB_OUTPUT
 
       - name: Install WiX Toolset
         run: |
@@ -30,7 +38,9 @@ jobs:
       - name: Build MSI
         run: |
           $version = "${{ steps.version.outputs.VERSION }}"
-          wix build installer/Product.wxs -define Version=$version -o MyApp-$version.msi
+          $msiVersion = "${{ steps.version.outputs.MSI_VERSION }}"
+
+          wix build installer/Product.wxs -define Version=$msiVersion -o MyApp-$version.msi
 
       - name: Copy MSI to installers folder
         run: |
