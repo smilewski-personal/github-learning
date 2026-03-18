@@ -30,7 +30,7 @@ jobs:
       - name: Build MSI
         run: |
           $version = "${{ steps.version.outputs.VERSION }}"
-          wix build installer/Product.wxs -d:Version=$version -o MyApp-$version.msi
+          wix build installer/Product.wxs -define Version=$version -o MyApp-$version.msi
 
       - name: Copy MSI to installers folder
         run: |
