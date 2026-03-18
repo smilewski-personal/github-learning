@@ -2,6 +2,9 @@ name: Build MSI Installer
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -14,26 +17,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Get version from tag
+        id: version
+        run: |
+          $version = "${env:GITHUB_REF_NAME}".Replace("v","")
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
       - name: Install WiX Toolset
         run: |
           dotnet tool install --global wix
 
       - name: Build MSI
         run: |
-          wix build installer/Product.wxs -o MyApp.msi
+          wix build installer/Product.wxs `
+            -dVersion=${{ steps.version.outputs.VERSION }} `
+            -o MyApp-${{ steps.version.outputs.VERSION }}.msi
 
       - name: Copy MSI to installers folder
         run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          $file = "MyApp-$version.msi"
           mkdir Applications\Installers -Force
           New-Item -ItemType Directory -Force -Path Applications/Installers
-          Copy-Item -Path MyApp.msi -Destination Applications/Installers/MyApp.msi -Force
+          Copy-Item -Path $file -Destination "Applications/Installers/$file" -Force
 
       - name: Commit and push MSI
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add Applications/Installers/MyApp.msi
+          git add Applications/Installers/MyApp-${{ steps.version.outputs.VERSION }}.msi
 
           git commit -m "Add MSI installer [skip ci]" || echo "No changes to commit"
 
